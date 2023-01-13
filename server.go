@@ -12,6 +12,7 @@ import (
 type Logger interface {
 	Err(msg interface{}, keyvals ...interface{})
 	Info(msg interface{}, keyvals ...interface{})
+	Fatal(msg interface{}, keyvals ...interface{})
 }
 
 type options struct {
@@ -65,7 +66,7 @@ func NewHTTPServer(ctx context.Context, l Logger, wg *sync.WaitGroup, hler http.
 		if opt.TLSConfig == nil {
 			l.Info("starting http server", "addr", addr)
 			if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-				l.Err("starting http server error", "error", err.Error(), "addr", addr)
+				l.Fatal("starting http server error", "error", err.Error(), "addr", addr)
 			}
 		} else {
 			server.Handler = StrictHSTS(server.Handler)
@@ -74,7 +75,7 @@ func NewHTTPServer(ctx context.Context, l Logger, wg *sync.WaitGroup, hler http.
 			server.TLSNextProto = make(map[string]func(*http.Server, *tls.Conn, http.Handler), 0)
 			l.Info("starting https server", "addr", addr)
 			if err := server.ListenAndServeTLS("", ""); err != nil && err != http.ErrServerClosed {
-				l.Err("starting https server error", "error", err.Error(), "addr", addr)
+				l.Fatal("starting https server error", "error", err.Error(), "addr", addr)
 			}
 		}
 	}()
