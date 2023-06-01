@@ -59,6 +59,7 @@ func NewHTTPServer(ctx context.Context, l Logger, wg *sync.WaitGroup, hler http.
 		ReadTimeout:       opt.ReadTimeout,
 		WriteTimeout:      opt.WriteTimeout,
 		ReadHeaderTimeout: opt.ReadHeaderTimeout,
+		ErrorLog:          stdlibLogger(l),
 	}
 
 	wg.Add(1)
