@@ -10,9 +10,9 @@ import (
 
 // Logger is an interface for logging messages.
 type Logger interface {
-	Err(msg string, keyvals ...interface{})
-	Info(msg string, keyvals ...interface{})
-	Fatal(msg string, keyvals ...interface{})
+	Err(msg any, keyvals ...any)
+	Info(msg any, keyvals ...any)
+	Fatal(msg any, keyvals ...any)
 }
 
 type options struct {

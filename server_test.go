@@ -63,6 +63,6 @@ func handle(w http.ResponseWriter, r *http.Request) {
 
 type nullLogger struct{}
 
-func (l *nullLogger) Err(msg string, keyvals ...interface{})   {}
-func (l *nullLogger) Fatal(msg string, keyvals ...interface{}) {}
-func (l *nullLogger) Info(msg string, keyvals ...interface{})  {}
+func (l *nullLogger) Err(msg any, keyvals ...interface{})   {}
+func (l *nullLogger) Fatal(msg any, keyvals ...interface{}) {}
+func (l *nullLogger) Info(msg any, keyvals ...interface{})  {}
