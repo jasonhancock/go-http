@@ -25,10 +25,6 @@ func ExtractClientIP(r *http.Request) string {
 	return ip
 }
 
-type clientIP int
-
-const clientIPKey clientIP = iota
-
 // ClientIP is middleware that adds the client IP address to the context in the request.
 func ClientIP(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
@@ -39,11 +35,11 @@ func ClientIP(next http.Handler) http.Handler {
 
 // WithClientIP sets the IP in the context.
 func WithClientIP(ctx context.Context, ip string) context.Context {
-	return context.WithValue(ctx, clientIPKey, ip)
+	return context.WithValue(ctx, keyClientIP, ip)
 }
 
 // GetClientIP returns the client IP from the context.
 func GetClientIP(ctx context.Context) string {
-	s, _ := ctx.Value(clientIPKey).(string)
+	s, _ := ctx.Value(keyClientIP).(string)
 	return s
 }
