@@ -14,58 +14,59 @@ var _ Doer = &DoerMock{}
 
 // DoerMock is a mock implementation of Doer.
 //
-//     func TestSomethingThatUsesDoer(t *testing.T) {
+//	func TestSomethingThatUsesDoer(t *testing.T) {
 //
-//         // make and configure a mocked Doer
-//         mockedDoer := &DoerMock{
-//             DoFunc: func(in1 *http.Request) (*http.Response, error) {
-// 	               panic("mock out the Do method")
-//             },
-//         }
+//		// make and configure a mocked Doer
+//		mockedDoer := &DoerMock{
+//			DoFunc: func(request *http.Request) (*http.Response, error) {
+//				panic("mock out the Do method")
+//			},
+//		}
 //
-//         // use mockedDoer in code that requires Doer
-//         // and then make assertions.
+//		// use mockedDoer in code that requires Doer
+//		// and then make assertions.
 //
-//     }
+//	}
 type DoerMock struct {
 	// DoFunc mocks the Do method.
-	DoFunc func(in1 *http.Request) (*http.Response, error)
+	DoFunc func(request *http.Request) (*http.Response, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
 		// Do holds details about calls to the Do method.
 		Do []struct {
-			// In1 is the in1 argument value.
-			In1 *http.Request
+			// Request is the request argument value.
+			Request *http.Request
 		}
 	}
 	lockDo sync.RWMutex
 }
 
 // Do calls DoFunc.
-func (mock *DoerMock) Do(in1 *http.Request) (*http.Response, error) {
+func (mock *DoerMock) Do(request *http.Request) (*http.Response, error) {
 	if mock.DoFunc == nil {
 		panic("DoerMock.DoFunc: method is nil but Doer.Do was just called")
 	}
 	callInfo := struct {
-		In1 *http.Request
+		Request *http.Request
 	}{
-		In1: in1,
+		Request: request,
 	}
 	mock.lockDo.Lock()
 	mock.calls.Do = append(mock.calls.Do, callInfo)
 	mock.lockDo.Unlock()
-	return mock.DoFunc(in1)
+	return mock.DoFunc(request)
 }
 
 // DoCalls gets all the calls that were made to Do.
 // Check the length with:
-//     len(mockedDoer.DoCalls())
+//
+//	len(mockedDoer.DoCalls())
 func (mock *DoerMock) DoCalls() []struct {
-	In1 *http.Request
+	Request *http.Request
 } {
 	var calls []struct {
-		In1 *http.Request
+		Request *http.Request
 	}
 	mock.lockDo.RLock()
 	calls = mock.calls.Do
