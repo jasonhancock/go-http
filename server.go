@@ -3,6 +3,7 @@ package http
 import (
 	"context"
 	"crypto/tls"
+	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -10,6 +11,7 @@ import (
 
 // Logger is an interface for logging messages.
 type Logger interface {
+	Debug(msg any, keyvals ...any)
 	Err(msg any, keyvals ...any)
 	Info(msg any, keyvals ...any)
 	Fatal(msg any, keyvals ...any)
@@ -20,10 +22,18 @@ type options struct {
 	ReadTimeout       time.Duration
 	WriteTimeout      time.Duration
 	ReadHeaderTimeout time.Duration
+	ErrorLog          *log.Logger
 }
 
 // ServerOption is used to customize the server.
 type ServerOption func(*options)
+
+// WithErrorLog sets the ErrorLog on the HTTP server.
+func WithErrorLog(l *log.Logger) ServerOption {
+	return func(o *options) {
+		o.ErrorLog = l
+	}
+}
 
 // WithTLSConfig sets the TLS configuration to use on the server.
 func WithTLSConfig(c *tls.Config) ServerOption {
@@ -48,6 +58,7 @@ func NewHTTPServer(ctx context.Context, l Logger, wg *sync.WaitGroup, hler http.
 		ReadTimeout:       10 * time.Second,
 		WriteTimeout:      10 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
+		ErrorLog:          stdlibLogger(l),
 	}
 	for _, o := range opts {
 		o(&opt)
@@ -59,7 +70,7 @@ func NewHTTPServer(ctx context.Context, l Logger, wg *sync.WaitGroup, hler http.
 		ReadTimeout:       opt.ReadTimeout,
 		WriteTimeout:      opt.WriteTimeout,
 		ReadHeaderTimeout: opt.ReadHeaderTimeout,
-		ErrorLog:          stdlibLogger(l),
+		ErrorLog:          opt.ErrorLog,
 	}
 
 	wg.Add(1)
