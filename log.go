@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-// stdlibLogger initializes a *log.Logger that can be used as a net/http.Server's ErrorLog.
-func stdlibLogger(l Logger) *log.Logger {
+// StdlibLogger initializes a *log.Logger that can be used as a net/http.Server's ErrorLog.
+func StdlibLogger(l Logger) *log.Logger {
 	return log.New(&logAdapter{logger: l}, "", 0)
 }
 

@@ -12,7 +12,7 @@ func TestStdlibLogger(t *testing.T) {
 			ErrFunc:   func(msg any, keyvals ...any) {},
 			DebugFunc: func(msg any, keyvals ...any) {},
 		}
-		l := stdlibLogger(&logger)
+		l := StdlibLogger(&logger)
 
 		l.Println("foo")
 		l.Println("TLS handshake error")

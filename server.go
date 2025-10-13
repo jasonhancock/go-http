@@ -58,7 +58,7 @@ func NewHTTPServer(ctx context.Context, l Logger, wg *sync.WaitGroup, hler http.
 		ReadTimeout:       10 * time.Second,
 		WriteTimeout:      10 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
-		ErrorLog:          stdlibLogger(l),
+		ErrorLog:          StdlibLogger(l),
 	}
 	for _, o := range opts {
 		o(&opt)
