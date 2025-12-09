@@ -43,7 +43,7 @@ func WithTLSConfig(c *tls.Config) ServerOption {
 }
 
 // WithTimeouts sets the server's ReadTimeout, WriteTimeout, and ReadHeaderTimeout.
-func WithTimeeouts(t time.Duration) ServerOption {
+func WithTimeouts(t time.Duration) ServerOption {
 	return func(o *options) {
 		o.ReadTimeout = t
 		o.WriteTimeout = t
