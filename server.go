@@ -76,7 +76,13 @@ func NewHTTPServer(ctx context.Context, l Logger, wg *sync.WaitGroup, hler http.
 	wg.Add(1)
 	go func() {
 		if opt.TLSConfig == nil {
-			l.Info("starting http server", "addr", addr)
+			l.Info(
+				"starting http server",
+				"addr", addr,
+				"timeout_read", opt.ReadTimeout.String(),
+				"timeout_write", opt.WriteTimeout.String(),
+				"timeout_read_header", opt.ReadHeaderTimeout.String(),
+			)
 			if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 				l.Fatal("starting http server error", "error", err.Error(), "addr", addr)
 			}
@@ -85,7 +91,13 @@ func NewHTTPServer(ctx context.Context, l Logger, wg *sync.WaitGroup, hler http.
 			server.TLSConfig = opt.TLSConfig
 			// This next line disables HTTP/2 because it mandates the use of a weak 128 bit cipher.
 			server.TLSNextProto = make(map[string]func(*http.Server, *tls.Conn, http.Handler), 0)
-			l.Info("starting https server", "addr", addr)
+			l.Info(
+				"starting https server",
+				"addr", addr,
+				"timeout_read", opt.ReadTimeout.String(),
+				"timeout_write", opt.WriteTimeout.String(),
+				"timeout_read_header", opt.ReadHeaderTimeout.String(),
+			)
 			if err := server.ListenAndServeTLS("", ""); err != nil && err != http.ErrServerClosed {
 				l.Fatal("starting https server error", "error", err.Error(), "addr", addr)
 			}
