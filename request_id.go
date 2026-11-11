@@ -3,8 +3,7 @@ package http
 import (
 	"context"
 	"net/http"
-
-	"github.com/google/uuid"
+	"uuid"
 )
 
 // RequestHeader is the header that marks the http request id set by the server.
