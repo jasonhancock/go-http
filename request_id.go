@@ -25,3 +25,21 @@ func GetRequestID(ctx context.Context) string {
 	s, _ := ctx.Value(keyRequestID).(string)
 	return s
 }
+
+// ResolveRequestID returns the request id set in ctx by the RequestID
+// middleware as a "request_id" key/value pair, or nil if no request id is set.
+//
+// It satisfies github.com/jasonhancock/go-logger's ContextResolutionFunc, so
+// the request id can be added automatically to log lines written with the
+// logger's *Context methods:
+//
+//	l := logger.New(logger.WithContextResolutionFunc(http.ResolveRequestID))
+//	l.InfoContext(r.Context(), "handling request")
+func ResolveRequestID(ctx context.Context) []any {
+	id, ok := ctx.Value(keyRequestID).(string)
+	if !ok || id == "" {
+		return nil
+	}
+
+	return []any{"request_id", id}
+}
